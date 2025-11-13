@@ -1,0 +1,45 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IKpiManagement",
+  "sourceName": "contracts/PayrollManagement.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "employeeDid",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "kyDanhGia",
+          "type": "string"
+        }
+      ],
+      "name": "getEmployeeKpiSummary",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "evaluationCount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "overallRanking",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

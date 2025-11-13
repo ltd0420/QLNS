@@ -1,0 +1,45 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IAttendanceManagement",
+  "sourceName": "contracts/PayrollManagement.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "employeeDid",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "period",
+          "type": "string"
+        }
+      ],
+      "name": "getEmployeeAttendanceSummary",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "workingDays",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalHours",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "overtimeHours",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
