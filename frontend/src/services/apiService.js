@@ -158,9 +158,45 @@ class ApiService {
     return response.data;
   }
 
+  async submitCustomerFeedback(payload, isFormData = false) {
+    const config = isFormData ? {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    } : {};
+    const response = await this.client.post('/reviews', payload, config);
+    return response.data;
+  }
+
+  async updateFeedbackStatus(feedbackId, statusData) {
+    const response = await this.client.put(`/reviews/${feedbackId}/status`, statusData);
+    return response.data;
+  }
+
+  async getAllCustomerFeedback() {
+    const response = await this.client.get('/reviews');
+    return response.data;
+  }
+
   // Employee Ranking
   async getEmployeeRanking(employeeDid) {
     const response = await this.client.get(`/rankings/${employeeDid}`);
+    return response.data;
+  }
+
+  async getAttritionOverview(params = {}) {
+    const response = await this.client.get('/ai/attrition/overview', { params });
+    return response.data;
+  }
+
+  // AI Model Metadata
+  async getCnnMetadata() {
+    const response = await this.client.get('/ai/models/cnn/metadata');
+    return response.data;
+  }
+
+  async getPcaMetadata() {
+    const response = await this.client.get('/ai/models/pca/metadata');
     return response.data;
   }
 

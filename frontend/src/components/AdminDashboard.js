@@ -42,14 +42,14 @@ import EmployeeManagement from './admin/EmployeeManagement';
 import KpiCriteriaSetup from './admin/KpiCriteriaSetup';
 import AdminTaskManagement from './admin/TaskManagement';
 import PayrollManagement from './admin/PayrollManagement';
+import CustomerFeedbackDashboard from './admin/CustomerFeedbackDashboard';
+import AIModelsDashboard from './admin/AIModelsDashboard';
 const AttendanceManagement = () => <div>Attendance Management - Coming Soon</div>;
 const TaskManagement = () => <div>Task Management - Coming Soon</div>;
 const KpiEvaluation = () => <div>KPI Evaluation - Coming Soon</div>;
-const CustomerFeedback = () => <div>Customer Feedback - Coming Soon</div>;
 const SmartContractLogs = () => <div>Smart Contract Logs - Coming Soon</div>;
 const AnalyticsReports = () => <div>Analytics Reports - Coming Soon</div>;
 const AuditLogs = () => <div>Audit Logs - Coming Soon</div>;
-const AiModelsManagement = () => <div>AI Models Management - Coming Soon</div>;
 const SystemSettings = () => <div>System Settings - Coming Soon</div>;
 
 const drawerWidth = 300;
@@ -115,7 +115,7 @@ const menuItems = [
     id: 'feedback',
     label: 'Phản hồi Khách hàng',
     icon: FeedbackIcon,
-    component: CustomerFeedback,
+    component: CustomerFeedbackDashboard,
     category: 'Quản lý Hiệu suất'
   },
   {
@@ -150,7 +150,7 @@ const menuItems = [
     id: 'ai-models',
     label: 'Quản lý AI Models',
     icon: TrendingUpIcon,
-    component: AiModelsManagement,
+    component: AIModelsDashboard,
     category: 'Giám sát & Cài đặt'
   },
   {

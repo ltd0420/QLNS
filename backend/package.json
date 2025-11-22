@@ -14,22 +14,29 @@
     "deploy:payroll:sepolia": "hardhat run scripts/deploy-payroll.js --network sepolia",
     "update:env": "node scripts/update-env.js",
     "grant:hr": "hardhat run scripts/grant-hr-role.js --network localhost",
-    "impersonate": "hardhat run scripts/impersonate-accounts.js --network localhost"
+    "impersonate": "hardhat run scripts/impersonate-accounts.js --network localhost",
+    "seed:ai-models": "node scripts/seed-ai-model-metadata.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
+    "axios": "^1.13.2",
     "body-parser": "^1.20.2",
-    "socket.io": "^4.6.1",
-    "mongoose": "^8.0.0",
+    "cors": "^2.8.5",
+    "csv-parser": "^3.2.0",
     "dotenv": "^16.3.1",
-    "jsonwebtoken": "^9.1.0",
-    "web3": "^4.0.0",
     "ethers": "^6.8.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.0",
     "multer": "^1.4.5-lts.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.6.1",
+    "web3": "^4.0.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^4.9.5",
+    "hardhat": "^2.22.5",
     "nodemon": "^3.0.1"
   },
   "engines": {

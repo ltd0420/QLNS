@@ -108,7 +108,7 @@ async function main() {
 
       // Verify signer works
       const signer = await ethers.getSigner(checksumAddress);
-      const signerBalance = await signer.getBalance();
+      const signerBalance = await signer.provider.getBalance(signer.address);
       console.log("   ✓ Signer ready. Current balance:", ethers.formatEther(signerBalance), "ETH");
     } catch (error) {
       console.error(`   ✗ Failed to impersonate ${originalAddress}:`, error.message);

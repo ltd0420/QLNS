@@ -1,10 +1,15 @@
 const AiModelMetadata = require('../models/AiModelMetadata');
+const fs = require('fs').promises;
+const path = require('path');
 
 // Get all AI model metadata
 exports.getAllAiModelMetadata = async (req, res) => {
   try {
-    const aiModelMetadata = await AiModelMetadata.find();
-    res.json(aiModelMetadata);
+    const models = await AiModelMetadata.find().sort({ createdAt: -1 });
+    res.json({
+      message: 'AI model metadata retrieved successfully',
+      data: models
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -13,35 +18,15 @@ exports.getAllAiModelMetadata = async (req, res) => {
 // Get AI model metadata by name and version
 exports.getAiModelMetadataByNameVersion = async (req, res) => {
   try {
-    const { modelName, modelVersion } = req.params;
-    const aiModelMetadata = await AiModelMetadata.findOne({
-      model_name: modelName,
-      model_version: modelVersion
-    });
-    if (!aiModelMetadata) {
+    const { ten_mo_hinh, phien_ban } = req.query;
+    if (!ten_mo_hinh || !phien_ban) {
+      return res.status(400).json({ message: 'ten_mo_hinh and phien_ban are required' });
+    }
+    const model = await AiModelMetadata.findOne({ ten_mo_hinh, phien_ban });
+    if (!model) {
       return res.status(404).json({ message: 'AI model metadata not found' });
     }
-    res.json(aiModelMetadata);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Get AI models by type
-exports.getAiModelMetadataByType = async (req, res) => {
-  try {
-    const aiModelMetadata = await AiModelMetadata.find({ model_type: req.params.modelType });
-    res.json(aiModelMetadata);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Get AI models by status
-exports.getAiModelMetadataByStatus = async (req, res) => {
-  try {
-    const aiModelMetadata = await AiModelMetadata.find({ trang_thai: req.params.status });
-    res.json(aiModelMetadata);
+    res.json(model);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -49,10 +34,10 @@ exports.getAiModelMetadataByStatus = async (req, res) => {
 
 // Create new AI model metadata
 exports.createAiModelMetadata = async (req, res) => {
-  const aiModelMetadata = new AiModelMetadata(req.body);
   try {
-    const newAiModelMetadata = await aiModelMetadata.save();
-    res.status(201).json(newAiModelMetadata);
+    const model = new AiModelMetadata(req.body);
+    const newModel = await model.save();
+    res.status(201).json(newModel);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -61,16 +46,15 @@ exports.createAiModelMetadata = async (req, res) => {
 // Update AI model metadata
 exports.updateAiModelMetadata = async (req, res) => {
   try {
-    const { modelName, modelVersion } = req.params;
-    const updatedAiModelMetadata = await AiModelMetadata.findOneAndUpdate(
-      { model_name: modelName, model_version: modelVersion },
+    const updatedModel = await AiModelMetadata.findByIdAndUpdate(
+      req.params.id,
       req.body,
       { new: true, runValidators: true }
     );
-    if (!updatedAiModelMetadata) {
+    if (!updatedModel) {
       return res.status(404).json({ message: 'AI model metadata not found' });
     }
-    res.json(updatedAiModelMetadata);
+    res.json(updatedModel);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -79,12 +63,8 @@ exports.updateAiModelMetadata = async (req, res) => {
 // Delete AI model metadata
 exports.deleteAiModelMetadata = async (req, res) => {
   try {
-    const { modelName, modelVersion } = req.params;
-    const deletedAiModelMetadata = await AiModelMetadata.findOneAndDelete({
-      model_name: modelName,
-      model_version: modelVersion
-    });
-    if (!deletedAiModelMetadata) {
+    const deletedModel = await AiModelMetadata.findByIdAndDelete(req.params.id);
+    if (!deletedModel) {
       return res.status(404).json({ message: 'AI model metadata not found' });
     }
     res.json({ message: 'AI model metadata deleted successfully' });
@@ -93,49 +73,32 @@ exports.deleteAiModelMetadata = async (req, res) => {
   }
 };
 
-// Update model status
-exports.updateModelStatus = async (req, res) => {
+// Get CNN metadata from file
+exports.getCnnMetadata = async (req, res) => {
   try {
-    const { modelName, modelVersion } = req.params;
-    const { trang_thai } = req.body;
-
-    const updatedAiModelMetadata = await AiModelMetadata.findOneAndUpdate(
-      { model_name: modelName, model_version: modelVersion },
-      { trang_thai },
-      { new: true }
-    );
-
-    if (!updatedAiModelMetadata) {
-      return res.status(404).json({ message: 'AI model metadata not found' });
-    }
-    res.json(updatedAiModelMetadata);
+    const cnnMetaPath = path.join(__dirname, '../../dataset/test.ai_model_metadata.cnn.csv.meta.json');
+    const data = await fs.readFile(cnnMetaPath, 'utf-8');
+    const metadata = JSON.parse(data);
+    res.json(metadata);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.code === 'ENOENT') {
+      return res.status(404).json({ message: 'CNN metadata file not found. Please run reduce_dim_cnn.py first.' });
+    }
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Update model performance metrics
-exports.updateModelPerformance = async (req, res) => {
+// Get PCA metadata from file
+exports.getPcaMetadata = async (req, res) => {
   try {
-    const { modelName, modelVersion } = req.params;
-    const { accuracy, f1_score, last_trained } = req.body;
-
-    const updateData = {};
-    if (accuracy !== undefined) updateData.accuracy = accuracy;
-    if (f1_score !== undefined) updateData.f1_score = f1_score;
-    if (last_trained) updateData.last_trained = last_trained;
-
-    const updatedAiModelMetadata = await AiModelMetadata.findOneAndUpdate(
-      { model_name: modelName, model_version: modelVersion },
-      updateData,
-      { new: true }
-    );
-
-    if (!updatedAiModelMetadata) {
-      return res.status(404).json({ message: 'AI model metadata not found' });
-    }
-    res.json(updatedAiModelMetadata);
+    const pcaMetaPath = path.join(__dirname, '../../dataset/test.ai_model_metadata.pca.csv.meta.json');
+    const data = await fs.readFile(pcaMetaPath, 'utf-8');
+    const metadata = JSON.parse(data);
+    res.json(metadata);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.code === 'ENOENT') {
+      return res.status(404).json({ message: 'PCA metadata file not found. Please run reduce_dim.py first.' });
+    }
+    res.status(500).json({ message: error.message });
   }
 };
